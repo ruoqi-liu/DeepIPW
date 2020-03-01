@@ -1,7 +1,7 @@
 # DeepIPW
 
 ## 1. Introduction
-DeepIPW: deep inverse propensity weighting framework for drug repurposing using observational medical database.  
+A computational framework for drug repurposing from real-world data. DeepIPW: Deep Inverse Propensity Weighting.
 
 ## 2. Preprocessing data
 #### Running example

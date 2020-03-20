@@ -3,7 +3,21 @@
 ## 1. Introduction
 A computational framework for drug repurposing from real-world data. DeepIPW: Deep Inverse Propensity Weighting.
 
-## 2. Preprocessing data
+## 2. System requirement
+OS: Ubuntu 16.04
+
+GPU: NVIDIA 1080ti (11GB memory) is **minimum** requirement. We recommend NVIDIA TITAN RTX 6000 GPUs. 
+
+## 3. Dependencies
+```
+Python 3.6
+Pytorch 1.2.0
+Scipy 1.3.1
+Numpy 1.17.2
+Scikit-learn 0.22.2
+```
+
+## 4. Preprocessing data
 #### Running example
 ```
 cd preprocess
@@ -20,7 +34,7 @@ python run_preprocess.py
 - --save_cohort_all, save path.
 
 
-## 3. DeepIPW model
+## 5. DeepIPW model
 #### Bash command
 ```
 bash run_lstm.sh

@@ -18,13 +18,16 @@ Scikit-learn 0.22.2
 ```
 
 ## 4. Preprocessing data
-#### Running example
+### Dataset
+The real world patient data used in this paper is [MarketScan claims data](https://www.ibm.com/products/marketscan-research-databases). Interested parties may contact IBM for acquiring the data access at https://www.ibm.com/products/marketscan-research-databases.
+
+### Running example
 ```
 cd preprocess
 python run_preprocess.py
 ```
 
-#### Parameters
+### Parameters
 - --min_patients, minimum number of patients for each cohort.
 - --min_prescription, minimum times of prescriptions of each drug.
 - --time_interval, minimum time interval for every two prescriptions.
@@ -35,17 +38,17 @@ python run_preprocess.py
 
 
 ## 5. DeepIPW model
-#### Bash command
+### Bash command
 ```
 bash run_lstm.sh
 ```
-#### Python command
+### Python command
 ```
 cd deep-ipw
 python main.py
 ```
 
-#### Parameters
+### Parameters
 - --data_dir, input cohort data
 - --pickles_dir, pickles file.
 - --treated_drug_file, current evaluating drug.

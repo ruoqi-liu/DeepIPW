@@ -21,6 +21,18 @@ Scikit-learn 0.22.2
 ### Dataset
 The real world patient data used in this paper is [MarketScan claims data](https://www.ibm.com/products/marketscan-research-databases). Interested parties may contact IBM for acquiring the data access at https://www.ibm.com/products/marketscan-research-databases.
 
+### Input data demo
+The demo of the input data can be found in the *data* folder, where the data structures of the inputs are provided. Before running the preprocessing codes, make sure the input data format is same to the provided input demo.
+
+For example, the data structure for the prescription table (under *data/CAD/drug/drug12.csv*) is as follows,
+| ENROLID | NDCNUM | SVCDATE | DAYSUPP |
+|---------|--------|---------|---------|
+
+- ENROLID: Patient id
+- NDCNUM: Drug id
+- SVCDATE: Date to take the prescription
+- DAYSUPP: Days supply: The number of days of drug therapy covered by this prescription
+
 ### Running example
 ```
 cd preprocess

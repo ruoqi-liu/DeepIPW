@@ -33,7 +33,13 @@ For example, the data structure for the prescription table (under *data/CAD/drug
 - SVCDATE: Date to take the prescription
 - DAYSUPP: Days supply: The number of days of drug therapy covered by this prescription
 
-### Running example
+### Preprocess drug tables
+```
+cd preprocess
+python pre_drug.py 
+```
+
+### Preprocess patient cohort
 ```
 cd preprocess
 python run_preprocess.py

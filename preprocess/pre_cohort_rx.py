@@ -70,14 +70,6 @@ def pre_user_cohort_rx_v2(cad_prescription_taken_by_patient, cad_patient_take_pr
                     dates = sorted(dates)
                     dates = drug_is_taken_in_baseline_v2(index_date, dates)
                     if dates:
-                        # if drug not in cad_user_cohort_rx:
-                        #     cad_user_cohort_rx[drug][patient] = [(prescription, dates)]
-                        # else:
-                        #     if patient not in cad_user_cohort_rx[drug]:
-                        #         cad_user_cohort_rx[drug][patient] = [(prescription, dates)]
-                        #     else:
-                        #         cad_user_cohort_rx[drug][patient].append((prescription, dates))
-
                         for date in dates:
                             if drug not in cad_user_cohort_rx:
                                 cad_user_cohort_rx[drug][patient][date] = [prescription]
@@ -116,12 +108,12 @@ class AutoVivification(dict):
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # cad_prescription_taken_by_patient =my_load('../res/8.7/cad_prescription_taken_by_patient_exclude_30.pkl')
     # cad_patient_take_prescription = my_load('../res/8.7/cad_patient_take_prescription_exclude_30.pkl')
     # dump_file = '../res/10.15/user_cohort_rx_30.pkl'
     # min_patients = 500
     # pre_user_cohort_rx_v2(cad_prescription_taken_by_patient, cad_patient_take_prescription, min_patients, dump_file)
 
-    user_cohort_rx = my_load('../res/10.15/user_cohort_rx_30.pkl')
-    print()
+    # user_cohort_rx = my_load('../res/10.15/user_cohort_rx_30.pkl')
+    # print()

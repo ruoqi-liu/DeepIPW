@@ -59,8 +59,7 @@ def pre_user_cohort_triplet(cad_prescription_taken_by_patient, cad_user_cohort_r
                             save_cohort_outcome,
                     cad_user_cohort_demo, out_file_root):
     for drug, taken_by_patient in tqdm(cad_user_cohort_rx.items()):
-
-        file_x = out_file_root + drug + '.pkl'
+        file_x = '{}/{}.pkl'.format(out_file_root, drug)
         triples = []
         for patient, taken_times in taken_by_patient.items():
             index_date = cad_prescription_taken_by_patient.get(drug).get(patient)[0]
@@ -85,7 +84,7 @@ def pre_user_cohort_triplet(cad_prescription_taken_by_patient, cad_user_cohort_r
             triple = (patient, [rx_codes, dx_codes, demo_feature_vector[0], demo_feature_vector[1]],outcome)
             triples.append(triple)
 
-        # my_dump(triples, file_x)
+        my_dump(triples, file_x)
 
 
 
@@ -209,24 +208,24 @@ class AutoVivification(dict):
 
 
 
-if __name__ == '__main__':
-    cad_user_cohort_dx = my_load('../res/10.15/user_cohort_dx_30.pkl')
-    # dump_file = '../res/8.7/ccs2id.pkl'
-    # CCS2id = get_ccs2id(cad_user_cohort_dx, dump_file)
-    #
-    #
-    cad_user_cohort_rx = my_load('../res/10.15/user_cohort_rx_30.pkl')
-    # dump_file = '../res/8.7/rx2id.pkl'
-    # RX2id = get_rx2id(cad_user_cohort_rx, dump_file)
-
-    cad_prescription_taken_by_patient = my_load('../res/8.7/cad_prescription_taken_by_patient_exclude_30.pkl')
-    save_cohort_outcome = {}
-    save_cohort_outcome['heart-failure'] = my_load('../res/01.29/user_cohort_outcome_30_hf.pkl')
-    save_cohort_outcome['stroke'] = my_load('../res/01.28/user_cohort_outcome_30_stroke.pkl')
-    cad_user_cohort_demo = my_load('../res/8.7/user_cohort_demo_30.pkl')
-    # RX2id = my_load('../res/8.7/rx2id.pkl')
-    # CCS2id = my_load('../res/8.7/ccs2id.pkl')
-    out_file_root = '../user_cohort/01.31/'
-    pre_user_cohort_triplet(cad_prescription_taken_by_patient, cad_user_cohort_rx, cad_user_cohort_dx,
-                            save_cohort_outcome,
-                            cad_user_cohort_demo, out_file_root)
+# if __name__ == '__main__':
+#     cad_user_cohort_dx = my_load('../res/10.15/user_cohort_dx_30.pkl')
+#     # dump_file = '../res/8.7/ccs2id.pkl'
+#     # CCS2id = get_ccs2id(cad_user_cohort_dx, dump_file)
+#     #
+#     #
+#     cad_user_cohort_rx = my_load('../res/10.15/user_cohort_rx_30.pkl')
+#     # dump_file = '../res/8.7/rx2id.pkl'
+#     # RX2id = get_rx2id(cad_user_cohort_rx, dump_file)
+#
+#     cad_prescription_taken_by_patient = my_load('../res/8.7/cad_prescription_taken_by_patient_exclude_30.pkl')
+#     save_cohort_outcome = {}
+#     save_cohort_outcome['heart-failure'] = my_load('../res/01.29/user_cohort_outcome_30_hf.pkl')
+#     save_cohort_outcome['stroke'] = my_load('../res/01.28/user_cohort_outcome_30_stroke.pkl')
+#     cad_user_cohort_demo = my_load('../res/8.7/user_cohort_demo_30.pkl')
+#     # RX2id = my_load('../res/8.7/rx2id.pkl')
+#     # CCS2id = my_load('../res/8.7/ccs2id.pkl')
+#     out_file_root = '../user_cohort/01.31/'
+#     pre_user_cohort_triplet(cad_prescription_taken_by_patient, cad_user_cohort_rx, cad_user_cohort_dx,
+#                             save_cohort_outcome,
+#                             cad_user_cohort_demo, out_file_root)

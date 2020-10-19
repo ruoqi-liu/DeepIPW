@@ -1,6 +1,7 @@
 import argparse
 import os
 
+from preprocess.utils import get_patient_init_date
 from preprocess.pre_cohort import exclude
 from preprocess.pre_cohort_rx import pre_user_cohort_rx_v2
 from preprocess.pre_cohort_dx import get_user_cohort_dx
@@ -17,30 +18,35 @@ def parse_args():
     parser.add_argument('--time_interval', default=30, help='minimum time interval for every two prescriptions')
     parser.add_argument('--followup', default=730, help='number of days of followup period')
     parser.add_argument('--baseline', default=365, help='number of days of baseline period')
-    parser.add_argument('--input_pickles', default=os.path.join(os.getcwd(), 'pickles/'))
-    parser.add_argument('--save_cohort_all', required=True, default=os.path.join(os.getcwd(), 'tmp/save_cohort_all/'))
+    parser.add_argument('--input_data', default='../data/CAD')
+    parser.add_argument('--pickles', default='pickles')
+    parser.add_argument('--save_cohort_all', required=True, default='save_cohort_all/')
 
     args = parser.parse_args()
     return args
 
 
 def main(args):
+
     cad_prescription_taken_by_patient = pickle.load(
-        open(os.path.join(args.input_pickles, 'cad_prescription_taken_by_patient.pkl'), 'rb'))
-    patient_1stDX_date = pickle.load(open(os.path.join(args.input_pickles, 'patient_1stDX_date.pkl'), 'rb'))
-    patient_start_date = pickle.load(open(os.path.join(args.input_pickles, 'patient_start_date.pkl'), 'rb'))
-    icd9_to_css = pickle.load(open(os.path.join(args.input_pickles, 'icd9_to_css.pkl'), 'rb'))
-    icd10_to_css = pickle.load(open(os.path.join(args.input_pickles, 'icd10_to_css.pkl'), 'rb'))
+        open(os.path.join(args.pickles, 'cad_prescription_taken_by_patient.pkl'), 'rb'))
+
+    patient_1stDX_date, patient_start_date = get_patient_init_date(args.input_data, args.pickles)
+
+    icd9_to_css = pickle.load(open(os.path.join(args.pickles, 'icd9_to_css.pkl'), 'rb'))
+    icd10_to_css = pickle.load(open(os.path.join(args.pickles, 'icd10_to_css.pkl'), 'rb'))
 
     save_prescription, save_patient = exclude(cad_prescription_taken_by_patient, patient_1stDX_date,
                                                    patient_start_date, args.time_interval,
                                                    args.followup, args.baseline)
 
-    save_cohort_rx = pre_user_cohort_rx_v2(save_prescription, save_patient, args.min_patients)
-    save_cohort_dx = get_user_cohort_dx(save_prescription, icd9_to_css, icd10_to_css, args.min_patients)
-    save_cohort_demo = get_user_cohort_demo(save_prescription, args.min_patients)
-
     patient_list = get_patient_list(args.min_patients, save_prescription)
+
+    save_cohort_rx = pre_user_cohort_rx_v2(save_prescription, save_patient, args.min_patients)
+    save_cohort_dx = get_user_cohort_dx(args.input_data, save_prescription, icd9_to_css, icd10_to_css, args.min_patients, patient_list)
+    save_cohort_demo = get_user_cohort_demo(args.input_data, save_prescription, args.min_patients, patient_list)
+
+
     save_cohort_outcome = {}
     # Heart Failure
     codes9 = ['425', '428', '40201', '40211', '40291', '40401', '40403', '40411', '40413', '40491', '40493', 'K77']
@@ -53,14 +59,9 @@ def main(args):
     save_cohort_outcome['stroke'] = pre_user_cohort_outcome(patient_list, codes9, codes0)
 
 
-
-
     pre_user_cohort_triplet(save_prescription, save_cohort_rx, save_cohort_dx,
                             save_cohort_outcome, save_cohort_demo, args.save_cohort_all)
 
-    pre_user_cohort_triplet(cad_prescription_taken_by_patient, save_cohort_rx, save_cohort_dx,
-                            save_cohort_outcome,
-                            save_cohort_demo, args.save_cohort_all)
 
 
 

@@ -113,11 +113,11 @@ def get_patient_list(min_patient, cad_prescription_taken_by_patient):
                 patients_list.add(patient)
     return patients_list
 
-if __name__ == '__main__':
-
-
-    codes9 = ['425', '428', '40201','40211', '40291','40401','40403', '40411', '40413','40491','40493','K77']
-    codes0 = ['I11', 'I13', 'I50', 'I42', 'K77']
+# if __name__ == '__main__':
+#
+#
+#     codes9 = ['425', '428', '40201','40211', '40291','40401','40403', '40411', '40413','40491','40493','K77']
+#     codes0 = ['I11', 'I13', 'I50', 'I42', 'K77']
 
     # Stroke
     # codes9 = ['4380', '4381', '4382', '4383', '4384', '4385', '4386', '4387', '4388', '4389', 'V1254']
@@ -130,5 +130,5 @@ if __name__ == '__main__':
     # dump_file = '../res/01.28/user_cohort_outcome_30_hf.pkl'
     # pre_user_cohort_outcome(patient_list, codes9, codes0, dump_file)
 
-    outcome = pickle.load(open('../res/01.28/user_cohort_outcome_30_hf.pkl', 'rb'))
-    print()
+    # outcome = pickle.load(open('../res/01.28/user_cohort_outcome_30_hf.pkl', 'rb'))
+    # print()

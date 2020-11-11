@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 work_path=$(cd "dirname $0"; PWD)
-FILES=${work_path}/code/user_cohort/*.pkl
+FILES="${work_path}/preprocess/save_cohort_all/*.pkl"
 OUTPUT_LSTM="${work_path}/deep-ipw/log/log_LSTM"
 OUTPUT_LR="${work_path}/deep-ipw/log/log_LR"
 SAVE="${work_path}/deep-ipw/save/save_model"
 SAVE_DB="${work_path}/deep-ipw/save/save_db"
 PICKLES="${work_path}/deep-ipw/pickles"
+
+mkdir -p ${OUTPUT_LSTM} ${OUTPUT_LR} ${SAVE} ${SAVE_DB}
+
 for f in $FILES
 do
   data_dir=${f:0:61}

@@ -19,30 +19,84 @@ Scikit-learn 0.22.2
 
 ## 4. Preprocessing data
 ### Dataset
-The real world patient data used in this paper is [MarketScan claims data](https://www.ibm.com/products/marketscan-research-databases). Interested parties may contact IBM for acquiring the data access at https://www.ibm.com/products/marketscan-research-databases.
+The real world patient data used in this paper is [MarketScan claims data](https://www.ibm.com/products/marketscan-research-databases). Interested parties may contact IBM for acquiring the data access at this 
+[link](https://www.ibm.com/products/marketscan-research-databases).
+
+##### Data flow chart
+
+![data_flow_chart](src/MarketScan_DataFlow.png)
+Source: 2012 MarketScan&reg; CCAE MDCR User Guide
+
+##### Data files used 
+- Inpatient Admissions (I) : Admission summary records
+- Outpatient Services (O): Individual outpatient claim records
+- Outpatient Pharmaceutical Claims (D): Individual outpatient prescription drug claim records
+- Population (P): Summarizes demographic information about the eligible population
 
 ### Input data demo
-The demo of the input data can be found in the *data* folder, where the data structures of the inputs are provided. Before running the preprocessing codes, make sure the input data format is same to the provided input demo.
+The demo of the input data can be found in the [data](data/) folder, where the data structures and a [synthetic demo](data/synthetic) of the inputs are provided. Before running the preprocessing codes, make sure the input data format is same to the provided input demo.
 
-For example, the data structure for the prescription table (under *data/CAD/drug/drug12.csv*) is as follows,
-| ENROLID | NDCNUM | SVCDATE | DAYSUPP |
-|---------|--------|---------|---------|
+##### [Cohort](data/synthetic/Cohort.csv)
+The data structure for [cohort table](data/synthetic/Cohort.csv) is as follows,
 
-- ENROLID: Patient id
-- NDCNUM: Drug id
-- SVCDATE: Date to take the prescription
-- DAYSUPP: Days supply: The number of days of drug therapy covered by this prescription
+| Column Name | Description                        | Note                                                                                                                                 |
+|-------------|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| ENROLID     | Patient enroll ID                  | Unique identifier for each patient                                                                                                   |
+| Index_date  | The date of first CAD encounter    | i.e., min (ADMDATE [1st CAD admission date for the inpatient records],SVCDATE [1st CAD service date for the outpatient records]) |
+| DTSTART     | Date of insurance enrollment start | M/D/Y, e.g., 03/25/2732                                                                                                              |
+| DTEND       | Date of insurance enrollment end   | M/D/Y, e.g., 03/25/2732                                                                                                              |
+
+##### [Drug table](data/synthetic/drug)
+The data structure for the [drug table](data/synthetic/drug/drug12.csv) is as follows,
+
+| Column Name | Description                                                                  | Note                                                                                                                    |
+|-------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| ENROLID     | Patient enroll ID                                                            | Unique identifier for each patient                                                                                      |
+| NDCNUM      | National drug code ([NDC](https://www.fda.gov/drugs/drug-approvals-and-databases/national-drug-code-directory))                                                     | We map NDC to observational medical<br>outcomes partnership ([OMOP](https://ohdsi.org/)) ingredient concept ID, and obtain 1,353 unique drugs |
+| SVCDATE     | Date to take the prescription                                                | M/D/Y, e.g., 03/25/2732                                                                                                 |
+| DAYSUPP     | Days supply. The number of days of drug therapy covered by this prescription | Day, e.g., 28                                                                                                           |
+
+##### [Inpatient table](data/synthetic/inpatient)
+The data structure for the [inpatient table](data/synthetic/inpatient/inpat12.csv) is as follows,
+
+| Column Name  | Description                                       | Note                                                                                                                                                            |
+|--------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ENROLID      | Patient enroll ID                                 | Unique identifier for each patient                                                                                                                              |
+| DX1-DX15     | Diagnosis codes. International Classification of Diseases ([ICD](https://www.cdc.gov/nchs/icd/index.htm)) codes                                | 57,089 ICD-9/10 codes considered in the dataset. Dictionary for [ICD-9](http://www.icd9data.com/2015/Volume1/default.htm) and [ICD-10](https://www.icd10data.com/) codes.|
+| DXVER        | Flag to denote ICD-9/10 codes                     | “9” = ICD-9-CM and “0” = ICD-10-CM                                                                                                                              |                                                                                                                                                            |
+| ADMDATE      | Admission date for this inpatient visit           | M/D/Y, e.g., 03/25/2732                                                                                                                                         |
+| Days         | The number of days stay in the inpatient hospital | Day, e.g., 28                                                                                                                                                   |
+
+##### [Outpatient table](data/synthetic/outpatient)
+The data structure for the [outpatient table](data/synthetic/outpatient/outpat12.csv) is as follows,
+
+| Column Name  | Description                                       | Note                                                                                                                                                            |
+|--------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ENROLID      | Patient enroll ID                                 | Unique identifier for each patient                                                                                                                              |
+| DX1-DX4     | Diagnosis codes. International Classification of Diseases ([ICD](https://www.cdc.gov/nchs/icd/index.htm)) codes                                | 57,089 ICD-9/10 codes considered in the dataset. Dictionary for [ICD-9](http://www.icd9data.com/2015/Volume1/default.htm) and [ICD-10](https://www.icd10data.com/) codes.|
+| DXVER        | Flag to denote ICD-9/10 codes                     | “9” = ICD-9-CM and “0” = ICD-10-CM                                                                                                                              |                                                                                                                                                             |
+| SVCDATE      | Service date for this outpatient visit           | M/D/Y, e.g., 03/25/2732                                                                                                                                         |                                                                                                                                                |
+
+##### [Demographics](data/synthetic/demo.csv)
+The data structure for [demo table](data/synthetic/demo.csv) is as follows,
+
+| Column Name | Description        | Note                               |
+|-------------|--------------------|------------------------------------|
+| ENROLID     | Patient enroll ID  | Unique identifier for each patient |
+| DOBYR       | birth year         | Year, e.g., 2099                   |
+| SEX         | gender             | 1- male; 2- female                 |
 
 ### Preprocess drug tables
 ```
 cd preprocess
-python pre_drug.py 
+python pre_drug.py --input_data_dir ../data/synthetic/drug --output_data_dir 'pickles/cad_prescription_taken_by_patient.pkl'
 ```
 
 ### Preprocess patient cohort
 ```
+# Note: Here's just a demo case for parameter selection. They can be easily adjusted for different application scenario. 
 cd preprocess
-python run_preprocess.py
+python run_preprocess.py --min_patients 10 --min_prescription 2 --followup 60 --time_interval 240 --baseline 10 --input_data ../data/synthetic --save_cohort_all save_cohort_all/
 ```
 
 ### Parameters
@@ -73,16 +127,4 @@ python main.py
 - --controlled_drug, sampled controlled drugs (randomly sampling or ATC class).
 - --controlled_drug_ratio, ratio of the number of controlled drug.
 - --input_pickles, data pickles.
-- --random_seed.
-- --batch_size.
-- --diag_emb_size.
-- --med_emb_size.
-- --med_hidden_size.
-- --diag_hidden_size.
-- --learning_rate.
-- --weight_decay.
-- --epochs
-- --save_model_filename.
-- --outputs_lstm.
-- --outputs_lr.
-- --save_db.
+

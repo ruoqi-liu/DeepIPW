@@ -50,7 +50,7 @@ def main(args):
     controlled = []
 
     if args.controlled_drug == 'random':
-        cohort_size = pickle.load(open(os.path.join(args.pickles_dir, 'cohorts_size.pkl'), 'rb'))
+        cohort_size = pickle.load(open(os.path.join(args.data_dir, 'cohorts_size.pkl'), 'rb'))
         controlled_drugs = list(set(os.listdir(args.data_dir)) - set(args.treated_drug_file+'.pkl'))
         np.random.shuffle(controlled_drugs)
         n_control_patient = 0
@@ -86,10 +86,6 @@ def main(args):
     for c_drug_id in controlled_drugs_range:
         c = pickle.load(open(args.data_dir + c_drug_id, 'rb'))
         controlled.extend(c)
-    #
-    # for c_drug_id in controlled_drugs:
-    #     c = pickle.load(open(args.data_dir + c_drug_id, 'rb'))
-    #     controlled.extend(c)
 
     intersect = set(np.asarray(treated)[:, 0]).intersection(set(np.asarray(controlled)[:, 0]))
     controlled = np.asarray([controlled[i] for i in range(len(controlled)) if controlled[i][0] not in intersect])
@@ -108,11 +104,6 @@ def main(args):
 
     print("Constructed Dataset.", flush=True)
     my_dataset = Dataset(treated, controlled_sample)
-    # pickle.dump((my_dataset, args), open(args.save_db, 'wb'))
-
-    # my_dataset, args = pickle.load(open(args.save_db, 'rb'))
-    #
-    # np.random.seed(args.random_seed)
 
     train_ratio = 0.7
     val_ratio = 0.1
@@ -199,19 +190,9 @@ def main(args):
         print('Val AUC_treatment: {}'.format(AUC_val), flush=True)
         print('Val Max_unbalanced: {}'.format(max_unbalanced_weighted), flush=True)
         print('ATE_w: {}'.format(ATE[1][2]), flush=True)
-
-        # if AUC_val > highest_auc:
-        #     save_model(model, args.save_model_filename, model_params=model_params)
-        #     highest_auc=AUC_val
         if max_unbalanced_weighted < lowest_std:
             save_model(model, args.save_model_filename, model_params=model_params)
             lowest_std = max_unbalanced_weighted
-
-        # n_unbalanced_feature_w = len(np.where(hidden_deviation_w > 0.1)[0])
-        #
-        # if n_unbalanced_feature_w < lowest_n_unbalanced:
-        #     save_model(model, args.save_model_filename, model_params=model_params)
-        #     lowest_n_unbalanced = n_unbalanced_feature_w
 
         if epoch % 5 ==0:
             loss_test, AUC_test, _, _ =model_eval(model, test_loader, cuda=args.cuda)
@@ -245,17 +226,6 @@ def main(args):
                                                                 ATE_original, IPWEstimator_EY1_val,
                                                                 IPWEstimator_EY0_val,
                                                                 ATE_weighted))
-
-    # golds_treatment, logits_treatment, max_unbalanced_test = _model_eval(mymodel, data_loader, cuda=args.cuda)
-    # max_unbalanced_original, hidden_deviation, max_unbalanced_weighted, hidden_deviation_w = max_unbalanced_test
-    #
-    # pickle.dump((hidden_deviation, hidden_deviation_w, golds_treatment, logits_treatment,
-    #              my_dataset.diag_code_vocab, my_dataset.med_code_vocab),
-    #             open(args.outputs_lstm, 'wb'))
-
-
-
-    # run baseline
 
     train_x, train_t, train_y = [], [], []
     for idx in train_indices:
@@ -342,11 +312,6 @@ def main(args):
 
     print('LR: n_unbalanced_feature: {}, n_unbalanced_feature_w: {}'.format(n_unbalanced_feature, n_unbalanced_feature_w),
           flush=True)
-
-    # pickle.dump((hidden_deviation, hidden_deviation_w, t, propensity,
-    #              my_dataset.diag_code_vocab, my_dataset.med_code_vocab),
-    #             open(args.outputs_lr, 'wb'))
-
 
     output_lr.write(
         '{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(n_user, n_nonuser,

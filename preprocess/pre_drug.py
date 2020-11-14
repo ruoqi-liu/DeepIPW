@@ -3,13 +3,13 @@ from collections import defaultdict
 import pickle
 import numpy as np
 from datetime import datetime
-from tqdm import tqdm
+import os
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='process parameters')
-    parser.add_argument('--input_data_dir', default='../data/CAD/drug', help='input data directory')
-    parser.add_argument('--output_data_dir', default='pickles', help='output data directory')
+    parser.add_argument('--input_data_dir', default='../data/synthetic/drug', help='input data directory')
+    parser.add_argument('--output_data_dir', default='pickles/cad_prescription_taken_by_patient.pkl', help='output data directory')
 
     args = parser.parse_args()
     return args
@@ -37,61 +37,40 @@ def pre_drug_table(args):
     cad_prescription_taken_by_patient = defaultdict(dict)
     ndc2rx_mapping = ndc2rxing()
 
-    for dir in tqdm(args.input_data_dir):
-        for year in tqdm(range(12, 18)):
-            print('dir: {}\tyear: {}'.format(dir, year), flush=True)
-            file = '{}/drug{}.csv'.format(dir, year)
-            with open(file, 'r') as f:
-                next(f)
-                for row in f:
-                    row = row.strip('\n')
-                    row = row.split(',')
-                    enroll_id, prescription, date, day = row[0], row[1], row[2], row[3]
-                    if date and day:
-                        if prescription in ndc2rx_mapping:
-                            prescription_rx = ndc2rx_mapping.get(prescription)
-                            if prescription_rx not in cad_prescription_taken_by_patient:
+    files = os.listdir(args.input_data_dir)
+    for file in files:
+        print('dir: {}\tfile: {}'.format(args.input_data_dir, file), flush=True)
+        df = os.path.join(args.input_data_dir, file)
+        with open(df, 'r') as f:
+            next(f)
+            for row in f:
+                row = row.strip('\n')
+                row = row.split(',')
+                enroll_id, prescription, date, day = row[0], row[1], row[2], row[3]
+                if date and day:
+                    if prescription in ndc2rx_mapping:
+                        prescription_rx = ndc2rx_mapping.get(prescription)
+                        if prescription_rx not in cad_prescription_taken_by_patient:
+                            cad_prescription_taken_by_patient[prescription_rx][enroll_id] = set([(date, day)])
+                        else:
+                            if enroll_id not in cad_prescription_taken_by_patient.get(prescription_rx):
                                 cad_prescription_taken_by_patient[prescription_rx][enroll_id] = set([(date, day)])
                             else:
-                                if enroll_id not in cad_prescription_taken_by_patient.get(prescription_rx):
-                                    cad_prescription_taken_by_patient[prescription_rx][enroll_id] = set([(date, day)])
-                                else:
-                                    cad_prescription_taken_by_patient[prescription_rx][enroll_id].add((date, day))
+                                cad_prescription_taken_by_patient[prescription_rx][enroll_id].add((date, day))
 
     try:
         print('dumping...', flush=True)
-        out = '{}/cad_prescription_taken_by_patient.pkl'.format(args.output_data_dir)
         pickle.dump(cad_prescription_taken_by_patient,
-                    open(out, 'wb'))
+                    open(args.output_data_dir, 'wb'))
 
     except Exception as e:
         print(e)
 
     print('finish dump', flush=True)
 
+    print('# of Drugs: {}\t'.format(len(cad_prescription_taken_by_patient)))
+
     return cad_prescription_taken_by_patient
-
-
-def concomitant_drugs_extractor(cad_prescription_taken_by_patient, n_patient, n_prescription, time_interval):
-
-    user_cohort = defaultdict(list)
-    print('number of drugs: {}'.format(len(cad_prescription_taken_by_patient)), flush=True)
-    for drug in cad_prescription_taken_by_patient.keys():
-        patient_take_times = cad_prescription_taken_by_patient.get(drug)
-
-        if len(patient_take_times) < n_patient:
-            continue
-
-        count = 0
-        for patient, take_times in patient_take_times.items():
-            if drug_time_interval_is_valid(take_times, n_prescription, time_interval):
-                count += 1
-            if count >= n_patient:
-                user_cohort[drug].append(patient)
-
-    print('number of concomitant drugs: {}'.format(len(user_cohort.keys())), flush=True)
-    pickle.dump(user_cohort, open('../res/8.7/user_cohort.pkl', 'wb'))
-
 
 
 def drug_time_interval_is_valid(take_times, n_prescription, time_interval):
@@ -104,11 +83,6 @@ def drug_time_interval_is_valid(take_times, n_prescription, time_interval):
         if count >= n_prescription:
             return True
     return False
-
-
-def my_dump(obj, file_name):
-    print('dumping...')
-    pickle.dump(obj, open(file_name, 'wb'))
 
 
 if __name__ == '__main__':

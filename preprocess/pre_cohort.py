@@ -25,6 +25,7 @@ def get_patient_cohort(root_file):
 # 2. exclude patients who fail to constantly take the drug within 730 days (interval <= 90)
 # 3. exclude patients whose baseline period (time before index date) is less than 365 days
 
+
 def exclude(cad_prescription_taken_by_patient, patient_1stDX_date, patient_start_date, interval,
             followup, baseline):
 
@@ -45,10 +46,6 @@ def exclude(cad_prescription_taken_by_patient, patient_1stDX_date, patient_start
                     index_date, start_date, baseline):
                 cad_prescription_taken_by_patient_exclude[drug][patient] = dates
                 cad_patient_take_prescription_exclude[patient][drug] = dates
-
-
-    # my_dump(cad_prescription_taken_by_patient_exclude, dump_file_prescription)
-    # my_dump(cad_patient_take_prescription_exclude, dump_file_patient)
 
     return cad_prescription_taken_by_patient_exclude, cad_patient_take_prescription_exclude
 

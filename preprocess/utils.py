@@ -1,8 +1,10 @@
 from datetime import datetime
 import pickle
+import pandas as pd
 
 
 def get_patient_init_date(indir, outdir):
+
     patient_1stDX_date = {}
     patient_start_date = {}
     file = '{}/Cohort.csv'.format(indir)
@@ -10,7 +12,7 @@ def get_patient_init_date(indir, outdir):
         next(f)
         for row in f:
             row = row.split(',')
-            enrolid, dx_date, start_date = row[0], row[3], row[4]
+            enrolid, dx_date, start_date = row[0], row[1], row[2]
             patient_1stDX_date[enrolid] = datetime.strptime(dx_date, '%m/%d/%Y')
             patient_start_date[enrolid] = datetime.strptime(start_date, '%m/%d/%Y')
 

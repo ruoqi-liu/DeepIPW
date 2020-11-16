@@ -5,10 +5,10 @@ This repository contains source code and data description for paper "[A deep lea
 (accepted by **_Nature Machine Intelligence_**).
 
 In this paper, we present an efficient and easily-customized framework for generating and testing multiple candidates for drug repurposing using a retrospective analysis of real world data (RWD). 
-<img src="img/flowchart.png" width="50%"/>
+<img src="img/flowchart.png" width="60%"/>
 
 Building upon well-established causal inference and deep learning methods, our framework emulates randomized clinical trials for drugs present in a large-scale medical claims database.
-<img src="img/LSTM.png" width="50%"/>
+<img src="img/LSTM.png" width="60%"/>
 
 We demonstrate our framework on a coronary artery disease (CAD) cohort of millions of patients. We successfully identify drugs and drug combinations that significantly improve the CAD outcomes but not have been indicated for treating CAD, paving the way for drug repurposing.
 
@@ -34,7 +34,8 @@ The real world patient data used in this paper is [MarketScan claims data](https
 ##### Data flow chart
 
 The data flow chart of MarketScan claims data.
-<img src="img/MarketScan_DataFlow.png" width="50%"/>
+<img src="img/MarketScan_DataFlow.png" width="70%"/>
+
 Source: 2012 MarketScan&reg; CCAE MDCR User Guide
 
 ##### Data files used 

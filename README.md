@@ -33,7 +33,8 @@ The real world patient data used in this paper is [MarketScan claims data](https
 
 ##### Data flow chart
 
-![data_flow_chart](img/MarketScan_DataFlow.png)
+The data flow chart of MarketScan claims data.
+<img src="img/MarketScan_DataFlow.png" width="50%"/>
 Source: 2012 MarketScan&reg; CCAE MDCR User Guide
 
 ##### Data files used 

@@ -1,7 +1,16 @@
 # DeepIPW
 
 ## 1. Introduction
-A computational framework for drug repurposing from real-world data. DeepIPW: Deep Inverse Propensity Weighting.
+This repository contains source code and data description for paper "[A deep learning framework for drug repurposing via emulating clinical trials on real world patient data](https://arxiv.org/abs/2007.10152)". 
+(accepted by **_Nature Machine Intelligence_**).
+
+In this paper, we present an efficient and easily-customized framework for generating and testing multiple candidates for drug repurposing using a retrospective analysis of real world data (RWD). 
+<img src="img/flowchart.png" width="50%"/>
+
+Building upon well-established causal inference and deep learning methods, our framework emulates randomized clinical trials for drugs present in a large-scale medical claims database.
+<img src="img/LSTM.png" width="50%"/>
+
+We demonstrate our framework on a coronary artery disease (CAD) cohort of millions of patients. We successfully identify drugs and drug combinations that significantly improve the CAD outcomes but not have been indicated for treating CAD, paving the way for drug repurposing.
 
 ## 2. System requirement
 OS: Ubuntu 16.04
@@ -24,7 +33,7 @@ The real world patient data used in this paper is [MarketScan claims data](https
 
 ##### Data flow chart
 
-![data_flow_chart](src/MarketScan_DataFlow.png)
+![data_flow_chart](img/MarketScan_DataFlow.png)
 Source: 2012 MarketScan&reg; CCAE MDCR User Guide
 
 ##### Data files used 

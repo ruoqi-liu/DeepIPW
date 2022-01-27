@@ -1,7 +1,7 @@
 # DeepIPW
 
 ## 1. Introduction
-This repository contains source code and data description for paper "[A deep learning framework for drug repurposing via emulating clinical trials on real world patient data](https://arxiv.org/abs/2007.10152)". 
+This repository contains source code and data description for paper "[A deep learning framework for drug repurposing via emulating clinical trials on real world patient data](https://rdcu.be/cc2CP)". 
 (accepted by **_Nature Machine Intelligence_**).
 
 In this paper, we present an efficient and easily-customized framework for generating and testing multiple candidates for drug repurposing using a retrospective analysis of real world data (RWD). 
